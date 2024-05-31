@@ -195,14 +195,12 @@ void thinning(InputArray input, OutputArray output, int thinningType){
     do {
         thinningIteration(processed, 0, thinningType);
         thinningIteration(processed, 1, thinningType);
-        absdiff(processed, prev, diff);
-        if (!hasNonZero(diff)) break;
+        const auto res = cv::norm(processed, prev, NORM_L1);
+        if (res <= 0) { break; }
         processed.copyTo(prev);
-    }
-    while (true);
+    } while (true);
 
     processed *= 255;
-
     output.assign(processed);
 }
 
